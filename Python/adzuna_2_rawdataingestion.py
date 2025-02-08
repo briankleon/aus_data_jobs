@@ -6,7 +6,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 # Directory containing CSV files
-csv_dir_path = "C:/Users/brian/Documents/PythonScripts/jobs_api/v2"
+csv_dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 archive_dir_path = os.path.join(csv_dir_path, "archive")
 
 load_dotenv()  # Load environment variables from .env
@@ -54,3 +54,4 @@ for filename in os.listdir(csv_dir_path):
 
         except Exception as e:
             print(f"Error processing {filename}: {e}")
+    

@@ -1,1 +1,4 @@
 ".envarchive/__pycache__/*.pyc*.pyo.DS_Store" 
+archive/
+.vscode/
+.env
