@@ -81,7 +81,10 @@ def fetch_jobs_and_save_to_csv(search_terms):
 
             # Determine file suffix
             suffix = term.lower().replace(" ", "_")
-            output_csv_path = f"C:/Users/brian/Documents/PythonScripts/jobs_api/v2/jobs_output_data_{suffix}_{timestamp_str}.csv"
+
+            csv_dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+            output_csv_path = os.path.join(csv_dir_path, f"jobs_output_data_{suffix}_{timestamp_str}.csv")
+
             jobs_df.to_csv(output_csv_path, index=False)
             print(f"Data for '{term}' successfully fetched and saved to '{output_csv_path}'")
         else:
