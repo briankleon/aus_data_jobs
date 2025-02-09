@@ -4,3 +4,10 @@ psycopg2
 altair
 python-dotenv
 os
+sqlalchemy
+shutil
+datetime
+time
+json
+requests
+subprocess

@@ -1,3 +1,4 @@
+#import packages
 import pandas as pd
 from sqlalchemy import create_engine
 import os
@@ -5,7 +6,7 @@ import shutil
 from datetime import datetime
 from dotenv import load_dotenv
 
-# Directory containing CSV files
+# Directory containing CSV files. csv_dir_path is the project root directory 
 csv_dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 archive_dir_path = os.path.join(csv_dir_path, "archive")
 
