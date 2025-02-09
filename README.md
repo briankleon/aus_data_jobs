@@ -1,4 +1,4 @@
-# Project Title
+# Australian Data Jobs Pipeline
 
 This project is a data pipeline to better understand the latest trends in Data jobs in Australia. Data is sourced from Adzuna's API before it is ingested into a postgres database.
 
