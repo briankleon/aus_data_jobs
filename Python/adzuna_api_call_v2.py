@@ -17,7 +17,7 @@ def fetch_jobs_and_save_to_csv(search_terms):
         "app_key": os.getenv('API_APP_KEY'),
         "where": "Australia",
         "results_per_page": 50,
-        "max_days_old": 2,
+        "max_days_old": 7,
         "content-type": "application/json"
     }
 
