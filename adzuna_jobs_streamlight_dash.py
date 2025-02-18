@@ -51,7 +51,7 @@ def load_data():
     password=os.getenv('DB_PASSWORD')
 )
 
-    query = "SELECT * FROM adzuna_jobs_streamlit_dashboard;"  # Replace with your actual view name.
+    query = "SELECT * FROM adzuna_jobs_streamlit_dashboard where created <= current_date;"  # Replace with your actual view name.
     df = pd.read_sql(query, conn)
     conn.close()
     return df
@@ -302,18 +302,28 @@ if "created" in df.columns:
 col1, col2 = st.columns(2)
 col3, col4 = st.columns(2)
 
-# Top Left: Weekly Job Listings by Job Family
+# Create the line chart for Weekly Job Listings by Job Family
 with col1:
     st.markdown("### Job Listings Weekly")
     if "created" in df.columns and "title_data_family" in df.columns:
         # Group data by week and job family
         df_weekly = df.groupby([pd.Grouper(key="created", freq="W-MON"), "title_data_family"]).size().reset_index(name="job_count")
         df_weekly.rename(columns={"created": "week_begin"}, inplace=True)
-        df_weekly["week_begin"] = df_weekly["week_begin"].dt.strftime("%b %d")  # Format as 'Month Day' (e.g., Jan 3)
 
-        # Create the line chart
+        # Convert week_begin to datetime for proper sorting
+        df_weekly["week_begin_date"] = pd.to_datetime(df_weekly["week_begin"])
+        df_weekly = df_weekly.sort_values("week_begin_date")  # Sort by date
+
+        # Format the week_begin column as 'Month Day' for display
+        df_weekly["week_begin"] = df_weekly["week_begin_date"].dt.strftime("%b %d")
+
+        # Create the line chart with Altair
         line_chart = alt.Chart(df_weekly).mark_line(point=True).encode(
-            x=alt.X("week_begin:N", title="Week Beginning"),
+            x=alt.X(
+                "week_begin:N",
+                title="Week Beginning",
+                sort=None  # Already sorted in DataFrame
+            ),
             y=alt.Y("job_count:Q", title="Job Listing Count"),
             color=alt.Color("title_data_family:N", title="Job Family"),
         ).configure_legend(
@@ -324,9 +334,11 @@ with col1:
             width=600
         )
 
+        # Display the chart
         st.altair_chart(line_chart, use_container_width=True)
     else:
         st.write("Required fields ('created' or 'title_data_family') are not available.")
+
 
 # Visual 2: Sideways Bar Chart of Skills Count (Top Right)
 with col2:
