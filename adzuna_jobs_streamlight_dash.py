@@ -314,21 +314,17 @@ with col1:
         df_weekly["week_begin_date"] = pd.to_datetime(df_weekly["week_begin"])
         df_weekly = df_weekly.sort_values("week_begin_date")  # Sort by date
 
-        # Format the week_begin column as 'Month Day' for display
-        df_weekly["week_begin"] = df_weekly["week_begin_date"].dt.strftime("%b %d")
+        # Compute cumulative job counts by job family
+        df_weekly["cumulative_job_count"] = df_weekly.groupby("title_data_family")["job_count"].cumsum()
 
-        # Create the line chart with Altair
+        # Create the line chart with Altair using cumulative counts
         line_chart = alt.Chart(df_weekly).mark_line(point=True).encode(
-            x=alt.X(
-                "week_begin:N",
-                title="Week Beginning",
-                sort=None  # Already sorted in DataFrame
-            ),
-            y=alt.Y("job_count:Q", title="Job Listing Count"),
+            x=alt.X("week_begin_date:T", title="Week Ending", axis=alt.Axis(format='%b %d')),
+            y=alt.Y("cumulative_job_count:Q", title="Cumulative Job Listing Count"),
             color=alt.Color("title_data_family:N", title="Job Family"),
         ).configure_legend(
-            orient='bottom',  # Move legend to the bottom
-            direction='horizontal'  # Arrange legend items horizontally
+            orient='bottom',
+            direction='horizontal'
         ).properties(
             height=400,
             width=600
@@ -338,6 +334,7 @@ with col1:
         st.altair_chart(line_chart, use_container_width=True)
     else:
         st.write("Required fields ('created' or 'title_data_family') are not available.")
+
 
 
 # Visual 2: Sideways Bar Chart of Skills Count (Top Right)
