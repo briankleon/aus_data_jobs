@@ -66,4 +66,4 @@ SELECT title,
        url,
        timestamp
 FROM combined
-where ROW = 1
+where ROW = 1;
